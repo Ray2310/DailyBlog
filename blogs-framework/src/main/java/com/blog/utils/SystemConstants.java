@@ -11,6 +11,9 @@ public class SystemConstants {
     //分页数据的分页大小
     public static final int PAGE_SIZE = 10;
 
-    //文章的分类状态 0 正常 1 不正常
+    //文章的分类状态 0 正常 1 禁用
     public static final String ARTICLE_CATEGORY_STATUS = "0";
+
+    //友链状态
+    public static final String LINK_STATUS_NORMAL = "0";
 }

@@ -1,5 +1,6 @@
 package com.blog.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -47,6 +48,13 @@ public class Article {
     //删除标志（0代表未删除，1代表已删除）
     private Integer delFlag;
 
+    //所属分类名
+    /**
+     * @TableField(exist = false) 因为我们这个表是和数据库中的 article表是关联的 ，
+     * 所以我们需要将它进行修改，让这个属性没有对应的关联字段
+     */
+    @TableField(exist = false)
+    private String categoryName;
 
     public Long getId() {
         return id;
@@ -166,6 +174,14 @@ public class Article {
 
     public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 }
 
