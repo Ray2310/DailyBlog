@@ -24,7 +24,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
     @Override
     public ResponseResult getAllLink() {
         //查询所有审核通过的
-        LambdaQueryWrapper<Link> queryWrapper = new LambdaQueryWrapper();
+        LambdaQueryWrapper<Link> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Link::getStatus, SystemConstants.LINK_STATUS_NORMAL);
         List<Link> links = list(queryWrapper);
 

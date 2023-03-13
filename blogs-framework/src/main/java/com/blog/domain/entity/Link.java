@@ -10,7 +10,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
  * 友链(Link)表实体类
  *
  * @author makejava
- * @since 2022-02-03 12:22:50
  */
 @SuppressWarnings("serial")
 @Data

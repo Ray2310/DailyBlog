@@ -10,6 +10,11 @@ spring:
     multipart:
       max-file-size: 2MB
       max-request-size: 5MB
+  redis:
+    host: 192.168.96.130
+    port: 6379
+    password: '0000'
+
 #  security:
 #    user:
 #      name: root
@@ -27,4 +32,5 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
       id-type: auto     # 主键的自增
+
 

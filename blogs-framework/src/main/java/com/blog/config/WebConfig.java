@@ -39,7 +39,7 @@ public class WebConfig implements WebMvcConfigurer {
     //todo 修改时间格式 【yyyy-MM-dd HH:mm:ss】
     // 其实也可以直接在相关字段上加注解
     // @JsonFormat(timezone="GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
-    // 只是这样做可以使所有的时间格式都转换
+    // 只是这样做可以使所有的时间格式都转换(全局配置)
     @Bean//使用@Bean注入fastJsonHttpMessageConvert
     public HttpMessageConverter fastJsonHttpMessageConverters() {
         //1.需要定义一个Convert转换消息的对象
