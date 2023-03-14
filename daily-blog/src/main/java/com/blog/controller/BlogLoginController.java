@@ -3,7 +3,7 @@ package com.blog.controller;
 import com.blog.domain.ResponseResult;
 import com.blog.domain.entity.User;
 import com.blog.service.BlogLoginService;
-import org.springframework.security.core.parameters.P;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;

@@ -18,6 +18,6 @@ public class SystemConstants {
     public static final String LINK_STATUS_NORMAL = "0";
 
     //封装login时的key的前缀
-    public static final String LOGIN_KEY_PREFIX = "bloglogin";
+    public static final String LOGIN_KEY_PREFIX = "bloglogin: ";
 
 }

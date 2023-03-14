@@ -9,10 +9,8 @@ import sun.util.resources.cldr.mg.LocaleNames_mg;
 /**
  * 用来封装登录时的用户信息
  */
-@AllArgsConstructor
 @Data
-@NoArgsConstructor
-//@Accessors(chain = true)
+@Accessors(chain = true)
 public class UserInfoVo {
     private Long id;
     //昵称

@@ -78,11 +78,11 @@ public class JwtUtil {
         return builder.compact();
     }
 
-    public static void main(String[] args) throws Exception {
-        String token = "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJjYWM2ZDVhZi1mNjVlLTQ0MDAtYjcxMi0zYWEwOGIyOTIwYjQiLCJzdWIiOiJzZyIsImlzcyI6InNnIiwiaWF0IjoxNjM4MTA2NzEyLCJleHAiOjE2MzgxMTAzMTJ9.JVsSbkP94wuczb4QryQbAke3ysBDIL5ou8fWsbt_ebg";
-        Claims claims = parseJWT(token);
-        System.out.println(claims);
-    }
+//    public static void main(String[] args) throws Exception {
+//        String token = "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJjYWM2ZDVhZi1mNjVlLTQ0MDAtYjcxMi0zYWEwOGIyOTIwYjQiLCJzdWIiOiJzZyIsImlzcyI6InNnIiwiaWF0IjoxNjM4MTA2NzEyLCJleHAiOjE2MzgxMTAzMTJ9.JVsSbkP94wuczb4QryQbAke3ysBDIL5ou8fWsbt_ebg";
+//        Claims claims = parseJWT(token);
+//        System.out.println(claims);
+//    }
 
     /**
      * 生成加密后的秘钥 secretKey

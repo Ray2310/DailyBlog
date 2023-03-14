@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
  *
  * @author makejava
  */
-@Repository(value = "userMapper")
 public interface UserMapper extends BaseMapper<User> {
 
 }

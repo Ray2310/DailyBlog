@@ -13,7 +13,7 @@ import java.util.Collection;
 @NoArgsConstructor
 public class LoginUser implements UserDetails {
 
-    private User user;
+    protected User user;
 
     /**
      *
