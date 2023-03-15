@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-@TableName("User")
+@TableName("sys_user")
 public class User {
     //主键
     @TableId

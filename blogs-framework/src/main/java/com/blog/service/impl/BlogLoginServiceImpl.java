@@ -17,6 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +36,6 @@ public class BlogLoginServiceImpl implements BlogLoginService {
     @Resource
     private RedisCache redisCache;
 
-
     //todo 登录业务
     @Override
     public ResponseResult login(User user) {
@@ -45,10 +45,13 @@ public class BlogLoginServiceImpl implements BlogLoginService {
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(),user.getPassword());
 
-        Object credentials = authenticationToken.getCredentials();
-        System.out.println("2++++++++==" + credentials.toString());
-       // Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-     //   System.out.println(authenticate); //credentials ==> 密码
+        System.out.println(authenticationToken.getDetails());
+
+        /**
+         * 认证功能暂时有bug ，先跳过认证
+         * Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+         *          System.out.println(authenticate);
+         */
 
         //判断是否认证通过
         //获取userId ，生成token
@@ -56,21 +59,28 @@ public class BlogLoginServiceImpl implements BlogLoginService {
         if(Objects.isNull(loginUser)){
             throw new RuntimeException("用户名或密码错误！！！ ");
         }
-        System.out.println(loginUser.getPassword());
-        System.out.println();
-        System.out.println(user.getPassword());
-
         String userId = loginUser.getUser().getId().toString();
         //对userId进行加密
         String jwt = JwtUtil.createJWT(userId);
-        System.out.println("BlogLoginServiceImpl: " + jwt);
+        System.out.println("jwtToken : " + jwt);
         //把用户信息存入redis
-        redisCache.setCacheObject(SystemConstants.LOGIN_KEY_PREFIX+ userId,loginUser);
+        redisCache.setCacheObject(SystemConstants.LOGIN_KEY_PREFIX + userId,loginUser);
         //封装响应  ： 把token 和userInfoVo(由user转换而成) 封装 ，然后返回
         UserInfoVo userInfoVo = BeanCopyUtils.copyBean(loginUser.getUser(), UserInfoVo.class);
-        System.out.println("BlogLoginServiceImpl: " + userInfoVo);
         BlogUserLoginVo userLoginVo = new BlogUserLoginVo(jwt, userInfoVo);
-        System.out.println("BlogLoginServiceImpl: " + userLoginVo);
         return ResponseResult.okResult(userLoginVo);
+    }
+
+
+    //todo 退出登录
+    @Override
+    public ResponseResult logout() {
+        //获取 token 解析获取 userId
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        Long userId = loginUser.getUser().getId();
+
+        redisCache.deleteObject(SystemConstants.LOGIN_KEY_PREFIX + userId);
+        return ResponseResult.okResult();
     }
 }
