@@ -19,5 +19,9 @@ public class SystemConstants {
 
     //封装login时的key的前缀
     public static final String LOGIN_KEY_PREFIX = "bloglogin: ";
+    //文章根评论
+    public static final int ARTICLE_ROOT_COMMENT = -1;
+
+
 
 }

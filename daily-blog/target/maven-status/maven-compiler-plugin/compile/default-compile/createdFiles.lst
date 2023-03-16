@@ -1,3 +1,4 @@
+com\blog\controller\CommentController.class
 com\blog\controller\BlogLoginController.class
 com\blog\DailyBlogApplication.class
 com\blog\controller\CategoryController.class

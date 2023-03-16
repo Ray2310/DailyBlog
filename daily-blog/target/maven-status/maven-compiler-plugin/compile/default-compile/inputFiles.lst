@@ -1,4 +1,6 @@
 N:\DailyBlog\daily-blog\src\main\java\com\blog\controller\LinkController.java
+N:\DailyBlog\daily-blog\src\main\java\com\blog\filter\JwtAuthenticationTokenFilter.java
+N:\DailyBlog\daily-blog\src\main\java\com\blog\controller\CommentController.java
 N:\DailyBlog\daily-blog\src\main\java\com\blog\controller\BlogLoginController.java
 N:\DailyBlog\daily-blog\src\main\java\com\blog\controller\CategoryController.java
 N:\DailyBlog\daily-blog\src\main\java\com\blog\controller\ArticleController.java
