@@ -29,9 +29,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * 密码加密
      * @return
      */
+    public static void main(String[] args) {
+        passwordEncoder();
+    }
     @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
+    public static PasswordEncoder passwordEncoder(){
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+//        String encode = bCryptPasswordEncoder.encode("1234");
+//        System.out.println(encode);
+//        boolean matches = bCryptPasswordEncoder.matches("1234", "$2a$10$YcgEz3ksftVieI8jycP/3enGCr8fVQB5L8Qo6ayN.4jr1C5DwTDNC");
+//        System.out.println(matches);
+        //$2a$10$k7qjBivqu4Cy6YUlfnpC5eDYca7WXn.t63l03kFYNireCmbxJQW6K
+        //$10$Jnq31rRkNV3RNzXe0REsEOSKaYK8UgVZZqlNlNXqn
+        //$2a$10$YcgEz3ksftVieI8jycP/3enGCr8fVQB5L8Qo6ayN.4jr1C5DwTDNC
+        //$10$k7qjBivqu4Cy6YUlfnpC5eDYca7WXn.t63l03kFYNireCmbxJQW6K
+        return bCryptPasswordEncoder;
     }
 
 

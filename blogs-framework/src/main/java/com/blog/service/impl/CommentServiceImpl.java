@@ -46,12 +46,13 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         //分页查询
         Page<Comment> pageN = new Page<>(pageNum,pageSize);
         Page<Comment> page = page(pageN, queryWrapper);
+
         //封装返回
         List<CommentVo> list = toCommentVoList(page.getRecords());
         //查询所有根评论对应的子评论的集合 ，并且赋值给对应的属性children
         for (CommentVo commentVo : list){
             //查询对应子评论
-            List<CommentVo> children = getChildren(commentVo.getId());
+            List<CommentVo> children = getChildren(commentVo.getRootId());
             commentVo.setChildren(children);
         }
         return ResponseResult.okResult(new PageVo(list,page.getTotal()));
@@ -82,7 +83,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     //todo comment 集合 和commentVo 集合的拷贝
     private List<CommentVo> toCommentVoList(List<Comment> list){
         List<CommentVo> commentVos = BeanCopyUtils.copyBeanList(list, CommentVo.class);
-
         //遍历vo
         for (CommentVo commentVo : commentVos){
             //通过createBy查询用户的昵称并且赋值
@@ -91,10 +91,16 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             //通过 toCommentUserId查询用户ude昵称并赋值
             //如果 toCommentUserId != -1才进行查询
             if (commentVo.getToCommentUserId() != -1){
-                String toCommentName = userService.getById(commentVo.getToCommentId()).getNickName();
-                commentVo.setToCommentUserName(toCommentName);
+                String toCommentUserName = userService.getById(commentVo.getToCommentUserId()).getNickName();
+                commentVo.setToCommentUserName(toCommentUserName);
             }
         }
         return commentVos;
     }
 }
+
+/**
+ * 错误信息：
+ * 如果有子评论 ，那么所有的评论都会不其作用。同时子评论也无法发出
+ * 因为子评论回显可能有问题
+ */

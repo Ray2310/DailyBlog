@@ -20,6 +20,7 @@ public class CommentVo {
     private String content;
     //所回复的目标评论的userid
     private Long toCommentUserId;
+    //所回复的目标评论的username
     private String toCommentUserName;
     //回复目标评论id
     private Long toCommentId;
