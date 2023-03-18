@@ -30,3 +30,7 @@ mybatis-plus:
       id-type: auto     # 主键的自增
 
 
+oss:
+  accessKey: zmnrXrxNiI_rXCZYPZtiMcu5FxWNyV_XALGSZvxM
+  secretKey: cm543pgKDdleQ2BH2vhllqfZCBecAO_XvZCmDIdX
+  bucket: rayce-space

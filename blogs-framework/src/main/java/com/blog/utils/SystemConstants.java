@@ -22,6 +22,11 @@ public class SystemConstants {
     //文章根评论
     public static final int ARTICLE_ROOT_COMMENT = -1;
 
+    //评论列表类型
+    public static final String COMMENT_TYPE_ARTICLE = "0";
+    //友链评论
+    public static final String COMMENT_TYPE_FRIEND = "1";
+
 
 
 }

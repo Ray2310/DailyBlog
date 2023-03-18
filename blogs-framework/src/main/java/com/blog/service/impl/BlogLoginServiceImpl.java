@@ -76,6 +76,8 @@ public class BlogLoginServiceImpl implements BlogLoginService {
     public ResponseResult logout() {
         //获取 token 解析获取 userId
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("异常处理----"+ authentication.getPrincipal());
+
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         Long userId = loginUser.getUser().getId();
 
