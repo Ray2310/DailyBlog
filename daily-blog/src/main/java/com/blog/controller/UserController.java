@@ -1,5 +1,6 @@
 package com.blog.controller;
 
+import com.blog.annotation.SystemLog;
 import com.blog.domain.ResponseResult;
 import com.blog.domain.entity.User;
 import com.blog.service.UserService;
@@ -13,6 +14,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @SystemLog(businessName="更新用户信息")
     @GetMapping("/userInfo")
     public ResponseResult userInfo(){
         return userService.userInfo();
