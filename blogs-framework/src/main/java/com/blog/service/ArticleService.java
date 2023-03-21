@@ -11,4 +11,5 @@ public interface ArticleService extends IService<Article> {
 
     ResponseResult getArticleDetails(Long id);
 
+    ResponseResult updateViewCount(Long id);
 }

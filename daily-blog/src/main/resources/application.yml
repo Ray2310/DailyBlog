@@ -16,6 +16,7 @@ spring:
     password: '0000'
 
 
+
 # mybatis-plus的日志
 mybatis-plus:
   configuration:

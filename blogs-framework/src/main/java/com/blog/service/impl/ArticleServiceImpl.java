@@ -16,8 +16,11 @@ import com.blog.service.ArticleService;
 
 import com.blog.service.CategoryService;
 import com.blog.utils.BeanCopyUtils;
+import com.blog.utils.RedisCache;
 import com.blog.utils.SystemConstants;
 
+import io.swagger.models.auth.In;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -34,6 +37,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Resource
     private CategoryService categoryService;
+
+    @Autowired
+    private RedisCache redisCache;
 
     //todo 查询热门文章
     /*需求:
@@ -54,6 +60,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             return ResponseResult.errorResult(AppHttpCodeEnum.valueOf("暂无热门文章"));
         }
         List<Article> articles = page(pageN, queryWrapper).getRecords();
+        for (Article article: articles){
+            Integer viewCount = redisCache.getCacheMapValue(SystemConstants.VIEW_COUNT_KEY,article.getId().toString());
+            article.setViewCount(viewCount.longValue());
+        }
         // 类的赋值拷贝 Article中的某些字段 ---> HotArticle
         //使用BeanUtils进行拷贝
         List<HotArticle> hotArticles = BeanCopyUtils.copyBeanList(articles, HotArticle.class);
@@ -84,6 +94,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         List<Article> records = page.getRecords();
 
         for (Article article  : records){
+            //设置从缓存中查询文章的浏览量
+            Integer viewCount = redisCache.getCacheMapValue(SystemConstants.VIEW_COUNT_KEY,article.getId().toString());
+            article.setViewCount(viewCount.longValue());
             Category category = categoryService.getById(article.getCategoryId());
             article.setCategoryName(category.getName());
         }
@@ -104,6 +117,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public ResponseResult getArticleDetails(Long id) {
         //根据文章id查询文章
         Article article = getById(id);
+        /**
+         * 从redis中获取viewCount
+         */
+        Integer viewCount = redisCache.getCacheMapValue(SystemConstants.VIEW_COUNT_KEY, id.toString());
+        article.setViewCount(viewCount.longValue());
         //转换成vo格式
         ArticleDetailVo articleDetailVo = BeanCopyUtils.copyBean(article, ArticleDetailVo.class);
         //根据分类id查询分类名
@@ -117,4 +135,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         return ResponseResult.okResult(articleDetailVo);
     }
 
+    //todo 实现更新博客浏览量
+    @Override
+    public ResponseResult updateViewCount(Long id) {
+        //更新redis中对应博客id的浏览量
+        redisCache.incrementCacheMapValue(SystemConstants.VIEW_COUNT_KEY,id.toString(),1);
+        return ResponseResult.okResult() ;
+    }
 }

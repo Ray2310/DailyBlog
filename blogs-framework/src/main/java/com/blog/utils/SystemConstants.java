@@ -27,6 +27,8 @@ public class SystemConstants {
     //友链评论
     public static final String COMMENT_TYPE_FRIEND = "1";
 
+    //浏览量的key
+    public static final String VIEW_COUNT_KEY ="article:viewCount";
 
 
 }
