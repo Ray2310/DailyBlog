@@ -29,6 +29,14 @@ public class SystemConstants {
 
     //浏览量的key
     public static final String VIEW_COUNT_KEY ="article:viewCount";
+    /**
+     * 后台相关常量
+     */
+    //后台登录key的前缀
+    public static final String LOGIN_KEY = "login:";
 
-
+    //菜单权限类型
+    public static final String MENU_TYPE_C = "C";
+    //按钮权限类型
+    public static final String MENU_TYPE_F = "F";
 }

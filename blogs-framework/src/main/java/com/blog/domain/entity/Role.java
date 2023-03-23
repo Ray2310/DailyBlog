@@ -6,41 +6,35 @@ import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
-import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 /**
- * 评论表(Comment)表实体类
- *
- * @author makejava
- * @since 2022-02-08 23:49:34
+ * 角色信息表(Role)表实体类
+
  */
 @SuppressWarnings("serial")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("sg_comment")
-
-public class Comment  {
-    @TableId
+@TableName("sys_role")
+public class Role  {
+    //角色ID@TableId
     private Long id;
 
-    //评论类型（0代表文章评论，1代表友链评论）
-    private String type;
-    //文章id
-    private Long articleId;
-    //根评论id
-    private Long rootId;
-    //评论内容
-    private String content;
-    //所回复的目标评论的userid
-    private Long toCommentUserId;
-    //回复目标评论id
-    private Long toCommentId;
-    //填充
+    //角色名称
+    private String roleName;
+    //角色权限字符串
+    private String roleKey;
+    //显示顺序
+    private Integer roleSort;
+
+    //角色状态（0正常 1停用）
+    private String status;
+    //删除标志（0代表存在 2代表删除）
+    private String delFlag;
     @TableField(fill = FieldFill.INSERT)
     private Long createBy;
     @TableField(fill = FieldFill.INSERT)
@@ -49,9 +43,11 @@ public class Comment  {
     private Long updateBy;
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
-    //删除标志（0代表未删除，1代表已删除）
-    private Integer delFlag;
+    //备注
+    private String remark;
 
-
+    //关联菜单id数组，不是表中的字段  用来接收参数使用
+    @TableField(exist = false)
+    private Long[] menuIds;
 
 }

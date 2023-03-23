@@ -22,7 +22,7 @@ public class UpdateViewCountJob {
     private RedisCache redisCache;
     @Resource
     private ArticleService articleService;
-    @Scheduled(cron = "* 0/10 * * * ?") //每个10 分钟加载一次到数据库
+    @Scheduled(cron = "0 0/30 * * * ?") //每个10 分钟加载一次到数据库
     public void updateViewCount() {
         //获取redis中浏览量数据
         Map<String, Integer> viewCountMap = redisCache.getCacheMap(SystemConstants.VIEW_COUNT_KEY);
