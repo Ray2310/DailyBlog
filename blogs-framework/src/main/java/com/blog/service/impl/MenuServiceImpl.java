@@ -9,6 +9,7 @@ import com.blog.utils.SecurityUtils;
 import com.blog.utils.SystemConstants;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         //管理员返回所有的权限
         if(SecurityUtils.isAdmin()){
             LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
-            wrapper.in(Menu::getMenuType, SystemConstants.MENU_TYPE_C,SystemConstants.MENU_TYPE_F);  //权限类型为C 和 F
+            wrapper.in(Menu::getMenuType, SystemConstants.MENU_TYPE_C,SystemConstants.MENU_TYPE_F);  //菜单类型为C(菜单) 和 F（按钮）
             wrapper.eq(Menu::getStatus,SystemConstants.LINK_STATUS_NORMAL);//状态正常
             List<Menu> menus = list(wrapper);
             List<String> Perms = menus.stream().map(Menu::getPerms).collect(Collectors.toList());
@@ -94,8 +95,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     /**
      * 获取传入参数的子menu的list集合
      *  在menus中找打当前传入的menu的子菜单
-     * @param menu
-     * @param menus
+     * @param menu 获取它的子菜单
+     * @param menus 全部菜单集合
      */
     private List<Menu> getChildren(Menu menu, List<Menu> menus){
         List<Menu> children = menus.stream()

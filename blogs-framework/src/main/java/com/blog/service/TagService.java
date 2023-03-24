@@ -1,7 +1,10 @@
 package com.blog.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.blog.domain.ResponseResult;
+import com.blog.domain.dto.TagListDto;
 import com.blog.domain.entity.Tag;
+import com.blog.domain.vo.PageVo;
 
 
 import java.util.List;
@@ -15,7 +18,7 @@ import java.util.List;
  */
 public interface TagService extends IService<Tag> {
 
-//    ResponseResult<PageVo> pageTagList(Integer pageNum, Integer pageSize, TagListDto tagListDto);
+    ResponseResult<PageVo> pageTagList(Integer pageNum, Integer pageSize, TagListDto tagListDto);
 //
 //    List<TagVo> listAllTag();
 }
