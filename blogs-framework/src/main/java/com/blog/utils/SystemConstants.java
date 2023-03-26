@@ -39,4 +39,9 @@ public class SystemConstants {
     public static final String MENU_TYPE_C = "C";
     //按钮权限类型
     public static final String MENU_TYPE_F = "F";
+    //分类标签状态
+    public static final String CATEGORY_STATUS = "0";
+    //分类标签是否是删除的
+    public static final String CATEGORY_NOTDEL = "0";
+    public static final String TAG_NOTDEL = "0";
 }

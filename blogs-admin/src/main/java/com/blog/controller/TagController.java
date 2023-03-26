@@ -1,13 +1,12 @@
 package com.blog.controller;
 
 import com.blog.domain.ResponseResult;
+import com.blog.domain.dto.TagDto;
 import com.blog.domain.dto.TagListDto;
 import com.blog.domain.vo.PageVo;
 import com.blog.service.TagService;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -38,5 +37,27 @@ public class TagController {
 
         return tagService.pageTagList(pageNum,pageSize,tagListDto);
     }
+
+    //TODO 新增标签， 测试时需要在数据库记录中有创建时间、更新时间、创建人、创建人字段
+    @PostMapping
+    public ResponseResult addTag(@RequestBody TagListDto tagListDto){
+        return tagService.addTag(tagListDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseResult deleteTag(@PathVariable Long id){
+        return tagService.deleteTag(id);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseResult getTagById(@PathVariable Long id){
+        return tagService.getTagById(id);
+    }
+
+    @PutMapping
+    public ResponseResult updateTag(@RequestBody TagDto tagDto){
+        return tagService.updateTag(tagDto);
+    }
+
 
 }

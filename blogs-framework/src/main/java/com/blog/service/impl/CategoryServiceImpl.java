@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.blog.domain.ResponseResult;
 import com.blog.domain.entity.Article;
 import com.blog.domain.entity.Category;
+
 import com.blog.domain.vo.CategoryVo;
 import com.blog.mapper.CategoryMapper;
 import com.blog.service.ArticleService;
@@ -12,10 +13,8 @@ import com.blog.service.CategoryService;
 import com.blog.utils.BeanCopyUtils;
 import com.blog.utils.SystemConstants;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.ls.LSException;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -52,5 +51,16 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         List<CategoryVo> categoryVoList = BeanCopyUtils.copyBeanList(collect, CategoryVo.class);
 
         return ResponseResult.okResult(categoryVoList);
+    }
+
+    @Override
+    public ResponseResult listAllCategory() {
+        //查询出所有没有删除的分类
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Category::getStatus, SystemConstants.CATEGORY_STATUS);//没有被禁用的
+        queryWrapper.eq(Category::getDelFlag,SystemConstants.CATEGORY_NOTDEL);//没有被删除的
+        List<Category> list = list(queryWrapper);
+        List<CategoryVo> categoryVo1s = BeanCopyUtils.copyBeanList(list, CategoryVo.class);
+        return ResponseResult.okResult(categoryVo1s);
     }
 }

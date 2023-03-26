@@ -4,29 +4,30 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.blog.domain.ResponseResult;
+import com.blog.domain.dto.ArticleSummaryDto;
 import com.blog.domain.entity.Article;
+import com.blog.domain.entity.ArticleTag;
 import com.blog.domain.entity.Category;
-import com.blog.domain.vo.ArticleDetailVo;
-import com.blog.domain.vo.ArticleListVo;
-import com.blog.domain.vo.HotArticle;
-import com.blog.domain.vo.PageVo;
+import com.blog.domain.vo.*;
 import com.blog.enums.AppHttpCodeEnum;
 import com.blog.mapper.ArticleMapper;
 import com.blog.service.ArticleService;
 
+import com.blog.service.ArticleTagService;
 import com.blog.service.CategoryService;
 import com.blog.utils.BeanCopyUtils;
 import com.blog.utils.RedisCache;
 import com.blog.utils.SystemConstants;
 
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 文章接口实现
@@ -34,6 +35,9 @@ import java.util.Objects;
  */
 @Service
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
+
+    @Resource
+    private ArticleTagService articleTagService;
 
     @Resource
     private CategoryService categoryService;
@@ -142,4 +146,38 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         redisCache.incrementCacheMapValue(SystemConstants.VIEW_COUNT_KEY,id.toString(),1);
         return ResponseResult.okResult() ;
     }
+
+    //todo 后台写文章详情
+    @Override
+    @Transactional  //添加事务
+    public ResponseResult writeArticle(ArticleVo articleVo) {
+        Article article = BeanCopyUtils.copyBean(articleVo, Article.class);
+        save(article);
+        //将标签id的集合存入标签文章集合表中
+        List<ArticleTag> collect = articleVo.getTags().stream().map(tagId -> new ArticleTag(article.getId(), tagId)).collect(Collectors.toList());
+        articleTagService.saveBatch(collect);
+       return ResponseResult.okResult();
+    }
+
+
+    //todo 后台博文获取所有博文
+    @Override
+    public ResponseResult getAllArticle(int pageNum, int pageSize, ArticleSummaryDto articleSummary) {
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        //如果有categoryId ，那么查询和传入的就需要相同
+        //状态 ： 正式发布
+        queryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_PUT);
+        //置顶的文章（对isTop进行排序）
+        //分页查询
+        Page<Article> pageN = new Page<>(pageNum,pageSize);
+        Page<Article> page = page(pageN, queryWrapper);
+        //查询categoryName ，因为我们封装的是categoryName，但是查询出来的确实categoryId，所以需要在进行查询
+        List<Article> articles = page.getRecords();
+        List<AdminArticleVo> articleVos = BeanCopyUtils.copyBeanList(articles, AdminArticleVo.class);
+        PageVo pageVo = new PageVo(articleVos, page.getTotal());
+
+        return ResponseResult.okResult(pageVo);
+    }
+
+
 }
