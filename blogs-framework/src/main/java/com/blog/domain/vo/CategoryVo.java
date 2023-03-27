@@ -12,4 +12,6 @@ public class CategoryVo {
     private String description;
     private Long id;
     private String name;
+    //状态0:正常,1禁用
+    private String status;
 }

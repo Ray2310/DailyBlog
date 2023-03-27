@@ -3,7 +3,9 @@ package com.blog.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.blog.domain.entity.LoginUser;
 import com.blog.domain.entity.User;
+import com.blog.mapper.MenuMapper;
 import com.blog.mapper.UserMapper;
+import com.blog.utils.SystemConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,10 +13,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Objects;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
+
+    @Resource
+    private MenuMapper menuMapper;
 
     @Resource
     private UserMapper userMapper;
@@ -35,8 +41,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if(Objects.isNull(user)){
             throw new RuntimeException("用户不存在！！！");
         }
-        //TODO 还需要做的 : 查询权限信息封装
+        /**
+         * 还需要做的 : 后台用户查询权限信息封装
+         *
+         */
+
+        //用户是管理员
+        if(user.getType().equals(SystemConstants.ADMIN)){
+            //查询用户权限集合
+            List<String> perms = menuMapper.selectPermsByUserId(user.getId());
+            //封装到loginUser
+            return new LoginUser(user,perms);
+        }
         //返回用户信息
-        return new LoginUser(user);
+        return new LoginUser(user,null);
     }
 }

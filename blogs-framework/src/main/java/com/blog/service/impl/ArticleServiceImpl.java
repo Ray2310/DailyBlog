@@ -58,7 +58,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         queryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_PUT);
         queryWrapper.orderByDesc(Article::getViewCount);
 
-        Page<Article> pageN = new Page(SystemConstants.CURRENT_NOW,SystemConstants.PAGE_SIZE);
+        Page<Article> pageN = new Page<>(SystemConstants.CURRENT_NOW,SystemConstants.PAGE_SIZE);
         //判空
         if (ObjectUtils.isEmpty(pageN)){
             return ResponseResult.errorResult(AppHttpCodeEnum.valueOf("暂无热门文章"));
@@ -165,6 +165,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public ResponseResult getAllArticle(int pageNum, int pageSize, ArticleSummaryDto articleSummary) {
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
         //如果有categoryId ，那么查询和传入的就需要相同
+        //进行模糊查询
+        queryWrapper.like(Objects.nonNull(articleSummary.getTitle()),Article::getTitle,articleSummary.getTitle());
+        queryWrapper.like(Objects.nonNull(articleSummary.getSummary()),Article::getTitle,articleSummary.getTitle());
         //状态 ： 正式发布
         queryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_PUT);
         //置顶的文章（对isTop进行排序）
