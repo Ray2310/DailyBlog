@@ -49,4 +49,6 @@ public class SystemConstants {
     public static final String ADMIN = "1";
 
 
+    //进行逻辑删除字段
+    public static final String DELETE = "1";
 }

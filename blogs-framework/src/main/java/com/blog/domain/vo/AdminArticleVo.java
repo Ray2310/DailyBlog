@@ -39,6 +39,9 @@ public class AdminArticleVo {
     /**
      * 后台系统需要
      */
+    //创建者id
+    @TableField(fill = FieldFill.INSERT)
+    private Long createBy;
     //创建时间
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
@@ -46,5 +49,11 @@ public class AdminArticleVo {
     private Integer delFlag;
     //访问量
     private Long viewCount;
+    //更新人
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Long updateBy;
+    //更新时间
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Date updateTime;
 }
 

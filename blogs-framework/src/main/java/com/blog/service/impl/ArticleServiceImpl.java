@@ -1,6 +1,7 @@
 package com.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.blog.domain.ResponseResult;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -182,5 +184,66 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         return ResponseResult.okResult(pageVo);
     }
 
+    /**
+     * 后台更新博文前获取博文所有信息
+     * @param id 文章id
+     * @return 返回所有信息
+     */
+    @Override
+    public ResponseResult updateBefore(Long id) {
+        //1. 首先根据id获取所有信息
+        AdminArticleVo articleVo = BeanCopyUtils.copyBean(getById(id), AdminArticleVo.class);
+        //2. 获取所有的标签id，然后找出我们需要的
+        List<Long> ids = articleTagService.selectByArticleId(id);
+        articleVo.setTags(ids);
+        //2. 根据文章id 获取其所有的标签tags
+        System.out.println(articleVo);
+        //3. 封装返回
+        return ResponseResult.okResult(articleVo);
+    }
 
+    /**
+     * 首先更新请求
+     * @param articleVo 需要更新的文章
+     * @return
+     */
+    @Override
+    public ResponseResult updateNow(AdminArticleVo articleVo) {
+        UpdateWrapper<Article> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id",articleVo.getId());
+        Article article = BeanCopyUtils.copyBean(articleVo, Article.class);
+        wrapper.set("id",articleVo.getId());
+        wrapper.set("title",articleVo.getTitle());
+        wrapper.set("content",articleVo.getContent());
+        wrapper.set("summary",articleVo.getSummary());
+        wrapper.set("category_id",articleVo.getCategoryId());
+        wrapper.set("thumbnail",articleVo.getThumbnail());
+        wrapper.set("is_top",articleVo.getIsTop());
+        wrapper.set("status",articleVo.getStatus());
+        wrapper.set("view_count",articleVo.getViewCount());
+        wrapper.set("is_comment",articleVo.getIsComment());
+        wrapper.set("update_by",articleVo.getUpdateBy());
+        wrapper.set("update_time",articleVo.getUpdateTime());
+        update(wrapper);
+        //先删除对应的映射关系
+        articleTagService.deleteByArticleId(articleVo.getId(),articleVo.getTags());
+        //然后重新添加新增的标签映射关系
+        List<ArticleTag> collect = articleVo.getTags().stream().map(tagId -> new ArticleTag(article.getId(), tagId)).collect(Collectors.toList());
+        articleTagService.saveBatch(collect);
+        return ResponseResult.okResult();
+    }
+
+    /**
+     * 根据id逻辑删除文章
+     * @param id 文章id
+     * @return 删除结果
+     */
+    @Override
+    public ResponseResult deleteArticleById(Long id) {
+        UpdateWrapper<Article> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id",id);
+        wrapper.set("del_flag",SystemConstants.DELETE);
+        update(wrapper);
+        return ResponseResult.okResult();
+    }
 }
