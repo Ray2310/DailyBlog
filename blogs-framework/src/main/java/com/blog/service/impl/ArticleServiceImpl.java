@@ -82,11 +82,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     /*
     在首页查询文章页面都有文章列表  ，首页 ：查询所有文章
     分类页面： 查询对应分类的文章列表
-    要求 ：：1. 只能查询正式发布的文章 2. 置顶文章要显示在最前面
+    要求 : 1. 只能查询正式发布的文章 2. 置顶文章要显示在最前面
      */
     @Override
     public ResponseResult articleList(Integer pageNum, Integer pageSize, Long categoryId) {
-        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper();
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
         //如果有categoryId ，那么查询和传入的就需要相同
         queryWrapper.eq(Objects.nonNull(categoryId) && categoryId > 0,Article::getCategoryId,categoryId);
         //状态 ： 正式发布
@@ -209,22 +209,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
      */
     @Override
     public ResponseResult updateNow(AdminArticleVo articleVo) {
-        UpdateWrapper<Article> wrapper = new UpdateWrapper<>();
-        wrapper.eq("id",articleVo.getId());
         Article article = BeanCopyUtils.copyBean(articleVo, Article.class);
-        wrapper.set("id",articleVo.getId());
-        wrapper.set("title",articleVo.getTitle());
-        wrapper.set("content",articleVo.getContent());
-        wrapper.set("summary",articleVo.getSummary());
-        wrapper.set("category_id",articleVo.getCategoryId());
-        wrapper.set("thumbnail",articleVo.getThumbnail());
-        wrapper.set("is_top",articleVo.getIsTop());
-        wrapper.set("status",articleVo.getStatus());
-        wrapper.set("view_count",articleVo.getViewCount());
-        wrapper.set("is_comment",articleVo.getIsComment());
-        wrapper.set("update_by",articleVo.getUpdateBy());
-        wrapper.set("update_time",articleVo.getUpdateTime());
-        update(wrapper);
+        updateById(article);
         //先删除对应的映射关系
         articleTagService.deleteByArticleId(articleVo.getId(),articleVo.getTags());
         //然后重新添加新增的标签映射关系

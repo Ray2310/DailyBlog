@@ -21,7 +21,17 @@ public enum AppHttpCodeEnum {
     EMAIL_NOT_NULL(511, "邮箱不能为空"),
     NICKNAME_EXIST(512, "昵称已存在"),
     LOGIN_ERROR(505,"用户名或密码错误"),
-    TAG_ERROR(511,"标签不能为空");
+    TAG_ERROR(511,"标签不能为空"),
+
+    //菜单的相关报错
+    ICON_NOT_NULL(611,"菜单图标不能为空"),
+    MENU_NAME_NOT_NULL(611,"菜单名称不能为空"),
+    PATH_NOT_NULL(611,"路由地址不能为空"),
+    PARENT_NOT_SELF(612,"父菜单不能等于菜单本身"),
+    CHILDREN_NOT_NULL(613,"子菜单不为空，无法删除")
+    ;
+
+
     int code;
     String msg;
 

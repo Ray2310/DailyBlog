@@ -5,16 +5,14 @@ import com.blog.domain.dto.ArticleSummaryDto;
 import com.blog.domain.vo.AdminArticleVo;
 import com.blog.domain.vo.ArticleVo;
 import com.blog.service.ArticleService;
-import com.blog.service.CategoryService;
-import com.blog.service.TagService;
-import org.apache.commons.collections4.Put;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 
 /**
- * 写文章相关接口
+ * 后台管理文章相关接口
+ * @author Ray2310
  */
+
 @RestController
 @RequestMapping("/content/article")
 public class AdminArticleController {
@@ -27,6 +25,7 @@ public class AdminArticleController {
     public ResponseResult writeArticle(@RequestBody ArticleVo articleVo){
         return articleService.writeArticle(articleVo);
     }
+
     //todo 展示所有博文
     @GetMapping("/list")
     public ResponseResult articleList(int pageNum, int pageSize, ArticleSummaryDto articleSummary){
@@ -45,6 +44,7 @@ public class AdminArticleController {
         return articleService.updateNow(articleVo);
     }
 
+    //todo 删除文章
     @DeleteMapping("/{id}")
     public ResponseResult deleteArticleById(@PathVariable Long id){
         return articleService.deleteArticleById(id);

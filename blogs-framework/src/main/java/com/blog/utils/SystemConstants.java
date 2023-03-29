@@ -48,7 +48,8 @@ public class SystemConstants {
     //定义用户权限为管理员权限的
     public static final String ADMIN = "1";
 
-
+    //未删除的逻辑字段
+    public static final String NOT_DELETE = "0";
     //进行逻辑删除字段
     public static final String DELETE = "1";
 }

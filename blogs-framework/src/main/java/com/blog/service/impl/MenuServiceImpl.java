@@ -2,15 +2,24 @@ package com.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.blog.domain.ResponseResult;
+import com.blog.domain.entity.Article;
 import com.blog.domain.entity.Menu;
+import com.blog.domain.vo.MenuVo;
+import com.blog.enums.AppHttpCodeEnum;
 import com.blog.mapper.MenuMapper;
 import com.blog.service.MenuService;
+import com.blog.utils.BeanCopyUtils;
 import com.blog.utils.SecurityUtils;
 import com.blog.utils.SystemConstants;
+import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -20,6 +29,85 @@ import java.util.stream.Collectors;
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
 
 
+    //--------------------后端service------------------------------------
+    /*
+    展示菜单列表，不需要进行分页。可以正对菜单名做模糊查询，也可以根据菜单状态进行查询。
+    菜单要按照父菜单id 和 OrderNum进行排序
+     */
+    @Override
+    public ResponseResult getAll(String status, String menuName) {
+
+        //1. 按要求查询出所有的菜单
+        LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Menu::getDelFlag,SystemConstants.NOT_DELETE);
+        wrapper.like(Objects.nonNull(menuName),Menu::getMenuName,menuName);
+        wrapper.like(Objects.nonNull(status),Menu::getStatus,status);
+        //2. 按照父菜单 和 orderNum进行排序
+        wrapper.orderByAsc(Menu::getParentId);
+        wrapper.orderByAsc(Menu::getOrderNum);
+        List<Menu> list = list(wrapper);
+        List<MenuVo> menuVos = BeanCopyUtils.copyBeanList(list, MenuVo.class);
+        //3. 封装为Vo，然后在放到集合中返回
+        return ResponseResult.okResult(menuVos);
+    }
+
+    //todo 新增菜单 或者按钮
+    @Override
+    public ResponseResult addMenu(Menu menu) {
+        if(ObjectUtils.isEmpty(menu.getIcon())){
+           return ResponseResult.errorResult(AppHttpCodeEnum.ICON_NOT_NULL);
+        }
+        if(ObjectUtils.isEmpty(menu.getMenuName())){
+            return ResponseResult.errorResult(AppHttpCodeEnum.MENU_NAME_NOT_NULL);
+        }
+        if(ObjectUtils.isEmpty(menu.getPath())){
+            return ResponseResult.errorResult(AppHttpCodeEnum.PATH_NOT_NULL);
+        }
+        save(menu);
+        return ResponseResult.okResult();
+    }
+
+    //todo 根据id查询对应信息
+    @Override
+    public ResponseResult selectById(Long id) {
+        Menu menu = getById(id);
+        MenuVo menuVo = BeanCopyUtils.copyBean(menu, MenuVo.class);
+        return ResponseResult.okResult(menuVo);
+    }
+
+    //todo 更新菜单
+    //不能让菜单的父菜单 == 菜单本身
+    @Override
+    public ResponseResult updateMenu(Menu menu) {
+        System.out.println(menu);
+        if(menu.getParentId().equals(menu.getId())){
+            return ResponseResult.errorResult(AppHttpCodeEnum.PARENT_NOT_SELF);
+        }
+        LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Menu::getId,menu.getId());
+        remove(wrapper);
+        save(menu);
+        return ResponseResult.okResult();
+    }
+
+    //todo 根据id删除菜单
+    //不能删除有子菜单的父菜单
+    @Override
+    public ResponseResult deleteById(Long id) {
+        //查询是否有父菜单
+        Menu menu = getById(id);
+        List<Menu> children = menu.getChildren();
+        if(Objects.nonNull(children)){
+            return ResponseResult.errorResult(AppHttpCodeEnum.CHILDREN_NOT_NULL);
+        }
+        LambdaQueryWrapper<Menu> wrapper= new LambdaQueryWrapper<>();
+        wrapper.eq(Menu::getId,id);
+        remove(wrapper);
+        return ResponseResult.okResult();
+    }
+
+
+    //--------------------前端service------------------------------------
     /**
      * 根据用户id查询权限信息<br>
      * 如果用户id为1 代表管理员 ，menus中需要有所有菜单类型为c或者F的，状态为，未被删除的权限

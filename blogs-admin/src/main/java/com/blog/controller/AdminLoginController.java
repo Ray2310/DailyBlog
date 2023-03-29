@@ -5,7 +5,6 @@ import com.blog.domain.entity.User;
 import com.blog.enums.AppHttpCodeEnum;
 import com.blog.exception.SystemException;
 import com.blog.service.AdminLoginService;
-import com.blog.utils.SecurityUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +15,7 @@ import javax.annotation.Resource;
 
 @RestController
 @RequestMapping("/user")
-public class loginController {
+public class AdminLoginController {
     @Resource
     private AdminLoginService loginService;
 
