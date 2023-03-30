@@ -1,25 +1,24 @@
 package com.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.blog.domain.ResponseResult;
-import com.blog.domain.entity.Article;
 import com.blog.domain.entity.Menu;
 import com.blog.domain.vo.MenuVo;
+import com.blog.domain.vo.MenuTreeVo;
 import com.blog.enums.AppHttpCodeEnum;
 import com.blog.mapper.MenuMapper;
 import com.blog.service.MenuService;
 import com.blog.utils.BeanCopyUtils;
 import com.blog.utils.SecurityUtils;
 import com.blog.utils.SystemConstants;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -96,16 +95,31 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     public ResponseResult deleteById(Long id) {
         //查询是否有父菜单
         Menu menu = getById(id);
-        List<Menu> children = menu.getChildren();
-        if(Objects.nonNull(children)){
-            return ResponseResult.errorResult(AppHttpCodeEnum.CHILDREN_NOT_NULL);
+        List<Menu> list = list();
+        for(Menu children: list) {
+            if (children.getParentId().equals(id)) {
+                System.out.println("不能删除！");
+                return ResponseResult.errorResult(AppHttpCodeEnum.CHILDREN_NOT_NULL);
+            }
         }
-        LambdaQueryWrapper<Menu> wrapper= new LambdaQueryWrapper<>();
-        wrapper.eq(Menu::getId,id);
-        remove(wrapper);
+        UpdateWrapper<Menu> wrapper= new UpdateWrapper<>();
+        wrapper.eq("id",id);
+        wrapper.set("del_flag",SystemConstants.DELETE);
+        update(wrapper);
         return ResponseResult.okResult();
     }
 
+    @Override
+    public List<Menu> selectMenuList(Menu menu) {
+        LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
+        //menuName模糊查询
+        queryWrapper.like(StringUtils.hasText(menu.getMenuName()),Menu::getMenuName,menu.getMenuName());
+        queryWrapper.eq(StringUtils.hasText(menu.getStatus()),Menu::getStatus,menu.getStatus());
+        //排序 parent_id和order_num
+        queryWrapper.orderByAsc(Menu::getParentId,Menu::getOrderNum);
+        List<Menu> menus = list(queryWrapper);;
+        return menus;
+    }
 
     //--------------------前端service------------------------------------
     /**
@@ -167,7 +181,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
      * @param parentId 父菜单id
      * @return
      */
-    private List<Menu> buildMenuTree(List<Menu> menus, Long parentId) {
+    public List<Menu> buildMenuTree(List<Menu> menus, Long parentId) {
         List<Menu> menuList = menus.stream()//通过这样筛选就可以得到第一层级的menu
                 .filter(menu -> menu.getParentId().equals(parentId))
                 /*
@@ -190,6 +204,37 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         List<Menu> children = menus.stream()
                 .filter(menu1 -> menu1.getParentId().equals(menu.getId()))
                 .map(menu1 -> menu1.setChildren(getChildren(menu1,menus)))  //如果有很多的子菜单，那么就可以用到这个递归
+                .collect(Collectors.toList());
+        return children;
+    }
+
+
+    //---------------------------------------------------------------------------
+
+    public List<MenuTreeVo> buildMenuTree1(List<MenuTreeVo> menus, Long parentId) {
+        List<MenuTreeVo> menuList = menus.stream()//通过这样筛选就可以得到第一层级的menu
+                .filter(menu -> menu.getParentId().equals(parentId))
+                /*
+                传入的menus是得到了第一层的menus（相当于Tree中的root节点），然后需要设置他的子菜单（left 和 right）
+                因为menus中有所有的菜单(父子都有)， 所以我们在设置left和right时需要找到他们的子菜单
+                所以就调用getChildren找到left或者right的子菜单，然后得到之后再设置给他们
+                 */
+                .map(menu -> menu.setChildren(getChildren1(menu, menus)))
+                .collect(Collectors.toList());
+        List<MenuTreeVo> roleAndMenuVos = BeanCopyUtils.copyBeanList(menuList, MenuTreeVo.class);
+        return roleAndMenuVos;
+    }
+
+    /**
+     * 获取传入参数的子menu的list集合
+     *  在menus中找打当前传入的menu的子菜单
+     * @param menu 获取它的子菜单
+     * @param menus 全部菜单集合
+     */
+    private List<MenuTreeVo> getChildren1(MenuTreeVo menu, List<MenuTreeVo> menus){
+        List<MenuTreeVo> children = menus.stream()
+                .filter(menu1 -> menu1.getParentId().equals(menu.getId()))
+                .map(menu1 -> menu1.setChildren(getChildren1(menu1,menus)))  //如果有很多的子菜单，那么就可以用到这个递归
                 .collect(Collectors.toList());
         return children;
     }
