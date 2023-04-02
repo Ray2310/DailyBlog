@@ -9,9 +9,11 @@ import com.blog.domain.dto.RoleDto;
 import com.blog.domain.dto.RoleStatusDto;
 import com.blog.domain.entity.Menu;
 import com.blog.domain.entity.Role;
+import com.blog.domain.entity.RoleMenu;
 import com.blog.domain.vo.PageVo;
 import com.blog.domain.vo.RoleVo;
 import com.blog.mapper.RoleMapper;
+import com.blog.service.RoleMenuService;
 import com.blog.service.RoleService;
 import com.blog.utils.BeanCopyUtils;
 import com.blog.utils.SystemConstants;
@@ -32,7 +34,7 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
 
     @Autowired
-    private MenuServiceImpl menuServiceImpl;
+    private RoleMenuService roleMenuService;
 
     //--------------------后台----------------------------
 
@@ -79,13 +81,88 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         return ResponseResult.okResult();
     }
 
+    /**
+     * 添加角色信息
+     * @param roleDto 用户写入的需要添加的角色信息
+     * @return
+     */
     @Override
     public ResponseResult AddRole(RoleDto roleDto) {
+
         Role role = BeanCopyUtils.copyBean(roleDto, Role.class);
         save(role);
+        //todo 还需要将角色和对应的菜单权限信息添加
+        Long[] menuIds = roleDto.getMenuIds();
+        for(Long id : menuIds){
+            roleMenuService.save(new RoleMenu(role.getId(),id));
+        }
         return ResponseResult.okResult();
     }
 
+    /**
+     * 根据id获取需要修改的角色信息
+     * @param id 角色id
+     * @return
+     */
+    @Override
+    public ResponseResult getRoleById(Long id) {
+        Role role = getById(id);
+        RoleVo roleVo = BeanCopyUtils.copyBean(role, RoleVo.class);
+        return ResponseResult.okResult(roleVo);
+    }
+
+    /**
+     * 进行修改 ，注意关联对应的菜单树信息
+     * @param role 传入对应的信息
+     * @return
+     */
+    @Override
+    public ResponseResult updateRole(Role role) {
+        updateById(role);
+        //删除之前的菜单关系
+        LambdaQueryWrapper<RoleMenu> roleMenuLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        roleMenuLambdaQueryWrapper.eq(RoleMenu::getRoleId,role.getId());
+        roleMenuService.remove(roleMenuLambdaQueryWrapper);
+        //重新建立菜单关系
+        //还需要将角色和对应的菜单权限信息添加
+        Long[] menuIds = role.getMenuIds();
+        for(Long id : menuIds){
+            roleMenuService.save(new RoleMenu(role.getId(),id));
+        }
+        return ResponseResult.okResult();
+    }
+
+    /**
+     * 根据id删除角色信息， 注意还要删除对应的角色关联的菜单
+     * 还有就是逻辑删除
+     * @param id 角色id
+     * @return
+     */
+    @Override
+    public ResponseResult deleteRole(Long id) {
+        UpdateWrapper<Role> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id",id);
+        wrapper.set("del_flag",SystemConstants.DELETE);
+        update(wrapper);
+        //删除对应的关联信息
+        LambdaQueryWrapper<RoleMenu> roleMenuLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        roleMenuLambdaQueryWrapper.eq(RoleMenu::getRoleId,id);
+        roleMenuService.remove(roleMenuLambdaQueryWrapper);
+        return ResponseResult.okResult();
+    }
+    @Override
+    public ResponseResult listRoles() {
+        //1. 先查询出未删除的
+        LambdaQueryWrapper<Role> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Role::getDelFlag, SystemConstants.NOT_DELETE);
+        //2. 按照求排序
+        wrapper.orderByAsc(Role::getRoleSort);
+        wrapper.eq(Role::getStatus,SystemConstants.STATUS_OK);
+        List<Role> list = list(wrapper);
+        //5. 封装返回
+        List<RoleVo> roleVos = BeanCopyUtils.copyBeanList(list, RoleVo.class);
+        return ResponseResult.okResult(roleVos);
+    }
     //--------------------前端----------------------------
     @Override
     public List<String> selectRoleKeyByUserId(Long id) {

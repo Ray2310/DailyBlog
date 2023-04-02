@@ -5,11 +5,13 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.blog.domain.ResponseResult;
 import com.blog.domain.entity.Menu;
+import com.blog.domain.entity.RoleMenu;
 import com.blog.domain.vo.MenuVo;
 import com.blog.domain.vo.MenuTreeVo;
 import com.blog.enums.AppHttpCodeEnum;
 import com.blog.mapper.MenuMapper;
 import com.blog.service.MenuService;
+import com.blog.service.RoleMenuService;
 import com.blog.utils.BeanCopyUtils;
 import com.blog.utils.SecurityUtils;
 import com.blog.utils.SystemConstants;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -27,6 +31,8 @@ import java.util.stream.Collectors;
 @Service
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
 
+    @Resource
+    private RoleMenuService roleMenuService;
 
     //--------------------后端service------------------------------------
     /*
@@ -121,6 +127,24 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         return menus;
     }
 
+    /**
+     * 根据id获取菜单id树
+     * @param id
+     * @return
+     */
+    @Override
+    public List<Long> selectMenuListByRoleId(Long id) {
+        LambdaQueryWrapper<RoleMenu> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(RoleMenu::getRoleId,id);
+        List<RoleMenu> list = roleMenuService.list(wrapper);    //对应的id集合
+        List<Long> menus = new ArrayList<>();
+        for(RoleMenu menu : list){
+            Long menuId = menu.getMenuId();
+            menus.add(menuId);
+        }
+        return menus;
+    }
+
     //--------------------前端service------------------------------------
     /**
      * 根据用户id查询权限信息<br>
@@ -208,34 +232,4 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         return children;
     }
 
-
-    //---------------------------------------------------------------------------
-
-    public List<MenuTreeVo> buildMenuTree1(List<MenuTreeVo> menus, Long parentId) {
-        List<MenuTreeVo> menuList = menus.stream()//通过这样筛选就可以得到第一层级的menu
-                .filter(menu -> menu.getParentId().equals(parentId))
-                /*
-                传入的menus是得到了第一层的menus（相当于Tree中的root节点），然后需要设置他的子菜单（left 和 right）
-                因为menus中有所有的菜单(父子都有)， 所以我们在设置left和right时需要找到他们的子菜单
-                所以就调用getChildren找到left或者right的子菜单，然后得到之后再设置给他们
-                 */
-                .map(menu -> menu.setChildren(getChildren1(menu, menus)))
-                .collect(Collectors.toList());
-        List<MenuTreeVo> roleAndMenuVos = BeanCopyUtils.copyBeanList(menuList, MenuTreeVo.class);
-        return roleAndMenuVos;
-    }
-
-    /**
-     * 获取传入参数的子menu的list集合
-     *  在menus中找打当前传入的menu的子菜单
-     * @param menu 获取它的子菜单
-     * @param menus 全部菜单集合
-     */
-    private List<MenuTreeVo> getChildren1(MenuTreeVo menu, List<MenuTreeVo> menus){
-        List<MenuTreeVo> children = menus.stream()
-                .filter(menu1 -> menu1.getParentId().equals(menu.getId()))
-                .map(menu1 -> menu1.setChildren(getChildren1(menu1,menus)))  //如果有很多的子菜单，那么就可以用到这个递归
-                .collect(Collectors.toList());
-        return children;
-    }
 }

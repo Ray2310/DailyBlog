@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class RoleDto {
+    private Long id;
     //角色名称
     private String roleName;
     //角色权限字符串

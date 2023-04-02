@@ -3,6 +3,7 @@ package com.blog.controller;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSON;
 import com.blog.domain.ResponseResult;
+import com.blog.domain.entity.Category;
 import com.blog.domain.vo.CategoryVo;
 import com.blog.domain.vo.ExcelCategoryVo;
 import com.blog.enums.AppHttpCodeEnum;
@@ -11,9 +12,7 @@ import com.blog.utils.BeanCopyUtils;
 import com.blog.utils.WebUtils;
 import org.apache.http.HttpResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -58,10 +57,29 @@ public class AdminCategoryController {
     }
 
      //todo 获取所有分类,并分页展示
-     @GetMapping("list")
+     @GetMapping("/list")
      public ResponseResult listAll(int pageNum ,int pageSize,CategoryVo categoryVo){
          return categoryService.listAllPage(pageNum,pageSize,categoryVo);
+     }
 
+     @PostMapping
+    public ResponseResult addCategory(@RequestBody CategoryVo categoryVo){
+        return categoryService.addCategory(categoryVo);
+     }
+
+     @GetMapping("/{id}")
+    public ResponseResult getCategoryById(@PathVariable Long id){
+        return categoryService.getCategoryById(id);
+     }
+
+     @PutMapping
+    public ResponseResult updateCategory(@RequestBody CategoryVo categoryVo){
+        return categoryService.updateCategory(categoryVo);
+     }
+
+     @DeleteMapping("/{id}")
+    public ResponseResult deleteCategory(@PathVariable Long id){
+        return categoryService.deleteCategory(id);
      }
 
 }

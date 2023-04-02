@@ -23,4 +23,6 @@ public interface MenuService extends IService<Menu> {
 
     List<Menu> selectMenuList(Menu menu);
 
+    List<Long> selectMenuListByRoleId(Long id);
+
 }

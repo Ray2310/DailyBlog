@@ -1,8 +1,11 @@
 N:\DailyBlog\blogs-admin\src\main\java\com\blog\BlogAdminApplication.java
 N:\DailyBlog\blogs-admin\src\main\java\com\blog\controller\AdminArticleController.java
+N:\DailyBlog\blogs-admin\src\main\java\com\blog\controller\AdminTagController.java
 N:\DailyBlog\blogs-admin\src\main\java\com\blog\controller\UploadController.java
-N:\DailyBlog\blogs-admin\src\main\java\com\blog\controller\loginController.java
+N:\DailyBlog\blogs-admin\src\main\java\com\blog\controller\AdminRoleController.java
 N:\DailyBlog\blogs-admin\src\main\java\com\blog\controller\UserController.java
 N:\DailyBlog\blogs-admin\src\main\java\com\blog\config\SecurityConfig.java
-N:\DailyBlog\blogs-admin\src\main\java\com\blog\controller\TagController.java
+N:\DailyBlog\blogs-admin\src\main\java\com\blog\controller\AdminMenuController.java
+N:\DailyBlog\blogs-admin\src\main\java\com\blog\controller\AdminLoginController.java
 N:\DailyBlog\blogs-admin\src\main\java\com\blog\filter\JwtAuthenticationTokenFilter.java
+N:\DailyBlog\blogs-admin\src\main\java\com\blog\controller\AdminCategoryController.java

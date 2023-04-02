@@ -27,8 +27,6 @@ public class SystemConverter {
                 .collect(Collectors.toList());
         return options;
     }
-
-
     /**
      * 得到子节点列表
      */
@@ -40,4 +38,34 @@ public class SystemConverter {
         return options;
 
     }
+
+    //------------上述函数式编程转为常规的for循环------------------------
+    /*
+    public static List<MenuTreeVo> buildMenuSelectTree(List<Menu> menus) {
+    List<MenuTreeVo> MenuTreeVos = new ArrayList<>();
+    for (Menu m : menus) {
+        MenuTreeVos.add(new MenuTreeVo(null, m.getId(), m.getMenuName(), m.getParentId()));
+    }
+    List<MenuTreeVo> options = new ArrayList<>();
+    for (MenuTreeVo o : MenuTreeVos) {
+        if (o.getParentId().equals(0L)) {
+            o.setChildren(getChildList(MenuTreeVos, o));
+            options.add(o);
+        }
+    }
+    return options;
+    }
+
+    private static List<MenuTreeVo> getChildList(List<MenuTreeVo> list, MenuTreeVo option) {
+        List<MenuTreeVo> options = new ArrayList<>();
+        for (MenuTreeVo o : list) {
+            if (Objects.equals(o.getParentId(), option.getId())) {
+                o.setChildren(getChildList(list, o));
+                options.add(o);
+            }
+        }
+        return options;
+    }
+
+     */
 }

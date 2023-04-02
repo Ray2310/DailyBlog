@@ -1,7 +1,9 @@
 package com.blog.domain.entity;
 
 import java.util.Date;
+import java.util.List;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -50,21 +52,20 @@ public class User {
     //头像
     @TableField(value = "avatar")
     private String avatar;
-    //创建人的用户id
-    @TableField(value = "create_by")
+
+    @TableField(fill = FieldFill.INSERT)
     private Long createBy;
-    //创建时间
-    @TableField(value = "create_time")
+    @TableField(fill = FieldFill.INSERT)
     private Date createTime;
-    //更新人
-    @TableField(value = "update_by")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Long updateBy;
-    //更新时间
-    @TableField(value = "update_time")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
     //删除标志（0代表未删除，1代表已删除）
     @TableField(value = "del_flag")
     private Integer delFlag;
-
+    //关联角色id数组，非user表字段
+    @TableField(exist = false)
+    private List<Long> roleIds;
 }
 

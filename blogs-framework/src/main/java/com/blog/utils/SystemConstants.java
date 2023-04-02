@@ -54,4 +54,5 @@ public class SystemConstants {
     public static final String DELETE = "1";
     //菜单状态 可用
     public static final String MENU_STATUS = "0";
+    public static final String STATUS_OK = "0";
 }

@@ -76,9 +76,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * @return
      * @throws Exception
      */
-    @Override
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+
+	/**
+	 * 重写父类的方法，返回一个身份验证管理器Bean。
+	 * @return AuthenticationManager 身份验证管理器Bean
+	 * @throws Exception 异常抛出
+	 */
+	@Override
+	@Bean
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+	    return super.authenticationManagerBean();
+	}
+
 }

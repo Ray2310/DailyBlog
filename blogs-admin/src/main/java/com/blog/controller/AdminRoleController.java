@@ -35,11 +35,31 @@ public class AdminRoleController {
     public ResponseResult changeStatus(@RequestBody RoleStatusDto role){
         return roleService.changeStatus(role);
     }
+    //todo 新增角色
     @PostMapping
     public ResponseResult AddRole(@RequestBody RoleDto roleDto){
         return roleService.AddRole(roleDto);
     }
 
+    @GetMapping("/{id}")
+    public ResponseResult getRoleById(@PathVariable Long id){
+        return roleService.getRoleById(id);
+    }
 
+    @PutMapping
+    public ResponseResult updateRole(@RequestBody Role role){
+        return roleService.updateRole(role);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseResult deleteRole(@PathVariable Long id){
+        return roleService.deleteRole(id);
+    }
+
+
+    @GetMapping("/listAllRole")
+    public ResponseResult listRoles(){
+        return roleService.listRoles();
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.blog.domain.ResponseResult;
@@ -15,6 +16,7 @@ import com.blog.service.CategoryService;
 import com.blog.utils.BeanCopyUtils;
 import com.blog.utils.SystemConstants;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -81,7 +83,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         queryWrapper.like(Objects.nonNull(categoryVo.getName()),Category::getName,categoryVo.getName());
         queryWrapper.like(Objects.nonNull(categoryVo.getStatus()),Category::getStatus,categoryVo.getStatus());
         //判断是否可用
-        queryWrapper.eq(Category::getStatus, SystemConstants.CATEGORY_STATUS);//没有被禁用的
         queryWrapper.eq(Category::getDelFlag,SystemConstants.CATEGORY_NOTDEL);//没有被删除的
         //进行分页处理
         Page<Category> page = new Page<>(pageNum,pageSize);
@@ -91,5 +92,55 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         List<CategoryVo> list = BeanCopyUtils.copyBeanList(records, CategoryVo.class);
         PageVo pageVo = new PageVo(list,page.getTotal());
         return ResponseResult.okResult(pageVo);
+    }
+
+    /**
+     * 新增分类
+     * @param categoryVo
+     * @return
+     */
+    @Override
+    public ResponseResult addCategory(CategoryVo categoryVo) {
+        Category category = BeanCopyUtils.copyBean(categoryVo, Category.class);
+        save(category);
+        return ResponseResult.okResult();
+    }
+
+    /**
+     * 根据id获取分类信息
+     */
+    @Override
+    public ResponseResult getCategoryById(Long id) {
+        Category byId = getById(id);
+        CategoryVo categoryVo = BeanCopyUtils.copyBean(byId, CategoryVo.class);
+        return ResponseResult.okResult(categoryVo);
+    }
+
+    /**
+     * 更新分类
+     * @param categoryVo
+     * @return
+     */
+    @Override
+    @Transactional
+    public ResponseResult updateCategory(CategoryVo categoryVo) {
+        Category category = BeanCopyUtils.copyBean(categoryVo, Category.class);
+        updateById(category);
+        return ResponseResult.okResult();
+    }
+
+
+    /**
+     * 逻辑删除分类
+     * @param id
+     * @return
+     */
+    @Override
+    public ResponseResult deleteCategory(Long id) {
+        UpdateWrapper<Category> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id",id);
+        wrapper.set("del_flag",SystemConstants.DELETE);
+        update(wrapper);
+        return ResponseResult.okResult();
     }
 }
