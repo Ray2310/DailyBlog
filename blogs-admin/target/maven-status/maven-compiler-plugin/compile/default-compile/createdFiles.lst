@@ -1,1 +1,13 @@
+com\blog\controller\AdminTagController.class
+com\blog\filter\JwtAuthenticationTokenFilter.class
+com\blog\controller\AdminMenuController.class
+com\blog\controller\AdminArticleController.class
+com\blog\controller\UploadController.class
+com\blog\controller\AdminUserController.class
+com\blog\controller\AdminLoginController.class
+com\blog\controller\UserController.class
 com\blog\BlogAdminApplication.class
+com\blog\controller\AdminRoleController.class
+com\blog\controller\AdminCategoryController.class
+com\blog\controller\AdminLinkController.class
+com\blog\config\SecurityConfig.class

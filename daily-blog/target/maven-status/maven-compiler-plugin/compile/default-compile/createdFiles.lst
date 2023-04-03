@@ -1,7 +1,12 @@
+com\blog\filter\JwtAuthenticationTokenFilter.class
 com\blog\controller\BlogLoginController.class
 com\blog\DailyBlogApplication.class
+com\blog\runner\ViewCountRunner.class
 com\blog\controller\LinkController.class
 com\blog\timeJob\UpdateViewCountJob.class
+com\blog\config\SwaggerConfig.class
+com\blog\controller\UploadController.class
+com\blog\controller\UserController.class
 com\blog\controller\CommentController.class
 com\blog\controller\CategoryController.class
 com\blog\controller\ArticleController.class
