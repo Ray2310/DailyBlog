@@ -7,8 +7,6 @@ import org.springframework.stereotype.Repository;
 
 /**
  * 用户表(User)表数据库访问层
- *
- * @author makejava
  */
 public interface UserMapper extends BaseMapper<User> {
 

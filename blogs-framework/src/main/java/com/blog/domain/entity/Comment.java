@@ -14,9 +14,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 /**
  * 评论表(Comment)表实体类
- *
- * @author makejava
- * @since 2022-02-08 23:49:34
  */
 @SuppressWarnings("serial")
 @Data
