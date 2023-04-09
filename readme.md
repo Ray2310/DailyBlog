@@ -32,24 +32,20 @@
 # 安装和配置：
 
 1. 修改数据库配置
-
-![image-20230409121942800](D:\Rayce_codingData\source\images\image-20230409121942800.png)
+![image](https://user-images.githubusercontent.com/109897266/230755670-257a101c-f860-408f-9a8c-0274653be301.png)
 
 2. 配置redis
-
-![image-20230409122054766](D:\Rayce_codingData\source\images\image-20230409122054766.png)
-
+![image](https://user-images.githubusercontent.com/109897266/230755679-ec30b5b4-856c-40e9-88d4-0cdaea8c145e.png)
 3. 七牛云配置
 
-![image-20230409123222724](D:\Rayce_codingData\source\images\image-20230409123222724.png)
+![image](https://user-images.githubusercontent.com/109897266/230755695-4834dba5-b9af-4f4e-9f32-5546f0695af2.png)
+
 
 
 
 # 运行项目：
+![image](https://user-images.githubusercontent.com/109897266/230755712-f1544af7-003d-4a3a-8160-0ae7dd14b7b2.png)
 
-![image-20230409122206285](D:\Rayce_codingData\source\images\image-20230409122206285.png)
-
-![image-20230409122237632](D:\Rayce_codingData\source\images\image-20230409122237632.png)
 
 ### 前端运行 
 
@@ -62,9 +58,7 @@
 
 
 # 项目结构：
-
-![image-20230409122958749](D:\Rayce_codingData\source\images\image-20230409122958749.png)
-
+![image](https://user-images.githubusercontent.com/109897266/230755722-74468474-58f3-4b36-8c4f-c2be9b8a8235.png)
 
 
 **其余部分采用三层架构模式进行编写**
@@ -72,64 +66,56 @@
 # 项目截图：
 
 1. 前端首页
+![image](https://user-images.githubusercontent.com/109897266/230755731-90d31f52-b501-4109-831c-c0ae5b3fbbf7.png)
 
-![image-20230409123350624](D:\Rayce_codingData\source\images\image-20230409123350624.png)
 
 2. 分类
+![image](https://user-images.githubusercontent.com/109897266/230755735-ccd1b6d3-b1ad-45b3-81f1-c6c4b76733f6.png)
 
-![image-20230409123423382](D:\Rayce_codingData\source\images\image-20230409123423382.png)
+
 
 3. 友链
 
-![image-20230409123440307](D:\Rayce_codingData\source\images\image-20230409123440307.png)
-
+![image](https://user-images.githubusercontent.com/109897266/230755741-3efbcde7-e52b-48b5-b125-d539bea20718.png)
 
 
 4. 评论
-
-![image-20230409123503322](D:\Rayce_codingData\source\images\image-20230409123503322.png)
-
+![image](https://user-images.githubusercontent.com/109897266/230755746-6f8730f0-e4a4-4b95-a98f-594edeb03988.png)
 
 
 5. 个人主页
 
-![image-20230409123521929](D:\Rayce_codingData\source\images\image-20230409123521929.png)
+![image](https://user-images.githubusercontent.com/109897266/230755750-2970f7e8-665c-4a20-9320-232434fb3db2.png)
 
 6. 注册
-
-![image-20230409123542255](D:\Rayce_codingData\source\images\image-20230409123542255.png)
+![image](https://user-images.githubusercontent.com/109897266/230755754-a60cd1de-0bf6-4b5c-960c-930ab2a4354b.png)
 
 
 
 7. 登录
-
-![image-20230409123557715](D:\Rayce_codingData\source\images\image-20230409123557715.png)
+![image](https://user-images.githubusercontent.com/109897266/230755760-0384ce5a-4a8c-4c7c-8da7-4762463e6587.png)
 
 
 
 8. 后台部分首页
-
-![image-20230409123634924](D:\Rayce_codingData\source\images\image-20230409123634924.png)
+![image](https://user-images.githubusercontent.com/109897266/230755771-af103cef-a09c-45f2-a337-a12c5bbf170d.png)
 
 9. 用户管理
 
-![image-20230409123659580](D:\Rayce_codingData\source\images\image-20230409123659580.png) 	
+![image](https://user-images.githubusercontent.com/109897266/230755773-6c7876a2-053a-4069-9d77-5a9affed1b83.png)
 
 10. 菜单管理
 
-![image-20230409123725427](D:\Rayce_codingData\source\images\image-20230409123725427.png)
-
+![image](https://user-images.githubusercontent.com/109897266/230755777-d52d92a9-cc99-42c7-bdcd-63a24de8e74c.png)
 
 
 11. 写文章、修改文章
-
-![image-20230409123753778](D:\Rayce_codingData\source\images\image-20230409123753778.png)
+![image](https://user-images.githubusercontent.com/109897266/230755782-2f5a6747-48dd-4a38-a09a-bd43e5872419.png)
 
 
 
 12. 友链管理
-
-![image-20230409123815139](D:\Rayce_codingData\source\images\image-20230409123815139.png)
+![image](https://user-images.githubusercontent.com/109897266/230755787-7f865a8e-5f9a-475f-b674-8bad1402aae6.png)
 
 
 
