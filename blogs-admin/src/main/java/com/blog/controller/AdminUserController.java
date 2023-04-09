@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
+/**
+ * 用户相关接口
+ * @author Ray2310
+ */
 @RestController
 @RequestMapping("/system/user")
 public class AdminUserController {
@@ -21,20 +25,24 @@ public class AdminUserController {
         return userService.listAll(pageNum,pageSize,userName,status,phonenumber);
     }
 
+    //todo 新增用户
     @PostMapping
     public ResponseResult addUser(@RequestBody User userDto) {
         return userService.addUser(userDto);
     }
 
+    //todo 删除指定用户
     @DeleteMapping("/{id}")
     public ResponseResult deleteUser(@PathVariable Long id){
         return userService.deleteUser(id);
     }
 
+    //todo 根据id 获取指定用户
     @GetMapping("{id}")
     public ResponseResult getUserById(@PathVariable Long id){
         return userService.getUserById(id);
     }
+    //todo 更新用户信息
     @PutMapping
     public ResponseResult updateUser(@RequestBody User user){
         return userService.updateUser(user);

@@ -16,6 +16,10 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * 当前用户详细信息
+ * @author Ray2310
+ */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 

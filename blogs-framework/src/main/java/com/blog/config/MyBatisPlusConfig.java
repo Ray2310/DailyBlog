@@ -6,15 +6,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * myBatisPlus分页配置
+ * myBatisPlus配置
  */
 @Configuration
 public class MyBatisPlusConfig {
 
+    //todo 开启分页配置
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor(){
         MybatisPlusInterceptor mb = new MybatisPlusInterceptor();
-        mb.addInnerInterceptor(new PaginationInnerInterceptor());
+        PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor();
+        mb.addInnerInterceptor(paginationInnerInterceptor);
         return mb;
     }
 }

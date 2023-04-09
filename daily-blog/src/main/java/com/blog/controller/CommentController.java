@@ -36,6 +36,7 @@ public class CommentController {
         return commentService.addComment(comment);
     }
 
+    //todo 分页获取评论信息
     @ApiOperation(value = "友链评论列表",notes = "获取一页友链评论")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNum", value = "页号"),

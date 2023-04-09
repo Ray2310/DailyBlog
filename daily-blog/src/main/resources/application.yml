@@ -11,7 +11,7 @@ spring:
       max-file-size: 2MB
       max-request-size: 5MB
   redis:
-    host: 192.168.96.129
+    host: 192.168.96.131
     port: 6379
     password: '0000'
 

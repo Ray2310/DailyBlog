@@ -19,9 +19,10 @@ import java.util.List;
 @Service("linkService")
 public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements LinkService {
 
-    // todo 获取所有友链
-    /*
-     如果进行评论 ，那么就可以将用户的网站名、地址、描述、logo放上去
+    /**
+     * 获取所有友链
+     * 如果进行评论 ，那么就可以将用户的网站名、地址、描述、logo放上去
+     * @return
      */
     @Override
     public ResponseResult getAllLink() {
@@ -33,21 +34,15 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
         List<LinkVo> linkVos = BeanCopyUtils.copyBeanList(links, LinkVo.class);
         return ResponseResult.okResult(linkVos);
     }
-
-    @Override
-    public PageVo selectLinkPage(Link link, Integer pageNum, Integer pageSize) {
-        return null;
-    }
-
     //-----------------------------后台实现----------------------------
 
 
     /**
-     * 分页获取所有列表
-     * @param pageNum
-     * @param pageSize
-     * @param name
-     * @param status
+     * 分页获取所有友链列表
+     * @param pageNum 当前页
+     * @param pageSize 分页大小
+     * @param name 友链名
+     * @param status 状态
      * @return
      */
     @Override

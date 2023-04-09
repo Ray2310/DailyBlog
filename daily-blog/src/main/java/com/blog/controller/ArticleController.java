@@ -16,17 +16,10 @@ public class ArticleController {
     @Resource
     private ArticleService articleService;
 
-//    @GetMapping("/list")
-//    public List<Article> test(){
-//        List<Article> list = articleService.list();
-//        return list;
-//    }
-
 
     //todo 查询热门文章
     @GetMapping("/hotArticleList")
     public ResponseResult hotArticleList(){
-        //查询热门文章，然后封装成ResponseResult ，然后返回
         return articleService.hotArticleList();
     }
 

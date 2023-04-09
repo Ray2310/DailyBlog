@@ -14,12 +14,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @SystemLog(businessName="更新用户信息")
     @GetMapping("/userInfo")
     public ResponseResult userInfo(){
         return userService.userInfo();
     }
 
+    @SystemLog(businessName="更新用户信息")
     @PutMapping("/userInfo")
     public ResponseResult updateUserInfo(@RequestBody User user){
         return userService.updateUserInfo(user);

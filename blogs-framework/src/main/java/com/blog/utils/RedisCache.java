@@ -20,7 +20,7 @@ public class RedisCache
 
     /**
      * 缓存基本的对象，Integer、String、实体类等
-     *
+     *暂时未设置缓存时间
      * @param key 缓存的键值
      * @param value 缓存的值
      */
@@ -203,6 +203,12 @@ public class RedisCache
     }
 
 
+    /**
+     * 更新redis中的文章浏览量 ，后期使用定时任务将redis中的任务更新至数据库
+     * @param key
+     * @param hKey
+     * @param v
+     */
     public void incrementCacheMapValue(String key,String hKey,int v){
         redisTemplate.opsForHash().increment(key,hKey,v);
     }

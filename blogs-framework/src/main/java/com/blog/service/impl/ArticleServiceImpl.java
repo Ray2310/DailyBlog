@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -44,13 +43,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Resource
     private CategoryService categoryService;
 
-    @Autowired
+    @Resource
     private RedisCache redisCache;
 
-    //todo 查询热门文章
-    /*需求:
-    查询出浏览量最高的前10篇文章的信息。 要求展览示文章标题和浏量。八能够让用户自己点击跳转到具体的文章详请进行浏览
-    注意 :`不要把草稿展示出来 ，不要把删除的文章查询出来`
+    /**
+     * 查询热门文章
+     * 需求:
+     *   查询出浏览量最高的前10篇文章的信息。 要求展览示文章标题和浏量。能够让用户自己点击跳转到具体的文章详请进行浏览
+     *   注意 :`不要把草稿展示出来 ，不要把删除的文章查询出来`
+     * @return
      */
     @Override
     public ResponseResult hotArticleList() {
@@ -70,19 +71,23 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             Integer viewCount = redisCache.getCacheMapValue(SystemConstants.VIEW_COUNT_KEY,article.getId().toString());
             article.setViewCount(viewCount.longValue());
         }
-        // 类的赋值拷贝 Article中的某些字段 ---> HotArticle
+        // 类的赋值拷贝 Article中的某些字段 ---> HotArticleVo
         //使用BeanUtils进行拷贝
-        List<HotArticle> hotArticles = BeanCopyUtils.copyBeanList(articles, HotArticle.class);
-        return ResponseResult.okResult(hotArticles);
+        List<HotArticleVo> hotArticleVos = BeanCopyUtils.copyBeanList(articles, HotArticleVo.class);
+        return ResponseResult.okResult(hotArticleVos);
     }
 
 
-
-    //todo 文章分页
-    /*
-    在首页查询文章页面都有文章列表  ，首页 ：查询所有文章
-    分类页面： 查询对应分类的文章列表
-    要求 : 1. 只能查询正式发布的文章 2. 置顶文章要显示在最前面
+    /**
+     * 文章分页
+     * 在首页查询文章页面都有文章列表  ，首页 ：查询所有文章
+     *  分类页面： 查询对应分类的文章列表
+     * 要求 :
+     * 1. 只能查询正式发布的文章 2. 置顶文章要显示在最前面
+     * @param pageNum 当前页码
+     * @param pageSize 分页大小
+     * @param categoryId 分类id
+     * @return
      */
     @Override
     public ResponseResult articleList(Integer pageNum, Integer pageSize, Long categoryId) {
@@ -98,7 +103,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         Page<Article> page = page(pageN, queryWrapper);
         //查询categoryName ，因为我们封装的是categoryName，但是查询出来的确实categoryId，所以需要在进行查询
         List<Article> records = page.getRecords();
-
         for (Article article  : records){
             //设置从缓存中查询文章的浏览量
             Integer viewCount = redisCache.getCacheMapValue(SystemConstants.VIEW_COUNT_KEY,article.getId().toString());
@@ -114,10 +118,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         return ResponseResult.okResult(pageVo);
     }
 
-    //todo 查询文章详情
-    /*
-    要在文章列表页面点击阅读全文时能够跳转到文章详情页面 ，可以让用户阅读文章正文
-    要求： 1. 要在文章详情中展示其分类名
+
+    /**
+     * 查询文章详情
+     *   要在文章列表页面点击阅读全文时能够跳转到文章详情页面 ，可以让用户阅读文章正文
+     *  要求： 1. 要在文章详情中展示其分类名
+     * @param id
+     * @return
      */
     @Override
     public ResponseResult getArticleDetails(Long id) {
@@ -141,7 +148,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         return ResponseResult.okResult(articleDetailVo);
     }
 
-    //todo 实现更新博客浏览量
+    /**
+     * 实现文章浏览量的更新
+     * @param id 文章id
+     * @return
+     */
     @Override
     public ResponseResult updateViewCount(Long id) {
         //更新redis中对应博客id的浏览量
@@ -149,9 +160,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         return ResponseResult.okResult() ;
     }
 
-    //todo 后台写文章详情
+    //-------------------------后台模块-------------------------------
+
+    /**
+     * 后台写文章详情
+     * @param articleVo 传入的文章相关内容
+     * @return 返回是否写入成功
+     */
     @Override
-    @Transactional  //添加事务
+    @Transactional  //添加事务，如果写入失败，那么图片等都不能写入数据库
     public ResponseResult writeArticle(ArticleVo articleVo) {
         Article article = BeanCopyUtils.copyBean(articleVo, Article.class);
         save(article);
@@ -162,7 +179,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
 
-    //todo 后台博文获取所有博文
+    /**
+     * 后台分页获取所有文章
+     * @param pageNum
+     * @param pageSize
+     * @param articleSummary
+     * @return
+     */
     @Override
     public ResponseResult getAllArticle(int pageNum, int pageSize, ArticleSummaryDto articleSummary) {
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();

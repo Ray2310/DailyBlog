@@ -35,9 +35,13 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     private RoleMenuService roleMenuService;
 
     //--------------------后端service------------------------------------
-    /*
-    展示菜单列表，不需要进行分页。可以正对菜单名做模糊查询，也可以根据菜单状态进行查询。
-    菜单要按照父菜单id 和 OrderNum进行排序
+
+    /**
+     * 展示菜单列表，不需要进行分页。可以正对菜单名做模糊查询，也可以根据菜单状态进行查询。
+     * 菜单要按照父菜单id 和 OrderNum进行排序
+     * @param status 状态
+     * @param menuName 菜单名
+     * @return
      */
     @Override
     public ResponseResult getAll(String status, String menuName) {
@@ -56,7 +60,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         return ResponseResult.okResult(menuVos);
     }
 
-    //todo 新增菜单 或者按钮
+    /**
+     * 新增菜单 或者按钮
+     * @param menu 前端传入新增信息
+     * @return
+     */
     @Override
     public ResponseResult addMenu(Menu menu) {
         if(ObjectUtils.isEmpty(menu.getIcon())){
@@ -72,7 +80,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         return ResponseResult.okResult();
     }
 
-    //todo 根据id查询对应信息
+    /**
+     * 根据id查询对应信息
+     * @param id 菜单id
+     * @return
+     */
     @Override
     public ResponseResult selectById(Long id) {
         Menu menu = getById(id);
@@ -80,8 +92,12 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         return ResponseResult.okResult(menuVo);
     }
 
-    //todo 更新菜单
-    //不能让菜单的父菜单 == 菜单本身
+    /**
+     * 更新菜单实现
+     *   不能让菜单的父菜单 == 菜单本身
+     * @param menu 菜单信息
+     * @return
+     */
     @Override
     public ResponseResult updateMenu(Menu menu) {
         System.out.println(menu);
@@ -95,12 +111,15 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         return ResponseResult.okResult();
     }
 
-    //todo 根据id删除菜单
-    //不能删除有子菜单的父菜单
+    /**
+     * 逻辑删除菜单
+     *   不能删除有子菜单的父菜单
+     * @param id 菜单id
+     * @return
+     */
     @Override
     public ResponseResult deleteById(Long id) {
         //查询是否有父菜单
-        Menu menu = getById(id);
         List<Menu> list = list();
         for(Menu children: list) {
             if (children.getParentId().equals(id)) {
@@ -115,6 +134,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         return ResponseResult.okResult();
     }
 
+    /**
+     * 获取菜单列表
+     * @param menu
+     * @return
+     */
     @Override
     public List<Menu> selectMenuList(Menu menu) {
         LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
@@ -123,7 +147,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         queryWrapper.eq(StringUtils.hasText(menu.getStatus()),Menu::getStatus,menu.getStatus());
         //排序 parent_id和order_num
         queryWrapper.orderByAsc(Menu::getParentId,Menu::getOrderNum);
-        List<Menu> menus = list(queryWrapper);;
+        List<Menu> menus = list(queryWrapper);
         return menus;
     }
 

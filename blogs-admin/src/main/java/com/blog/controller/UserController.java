@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * 当前用户相关接口
+ * @author Ray2310
+ */
 @RestController
 public class UserController {
     @Resource
@@ -25,6 +29,7 @@ public class UserController {
     @Resource
     private MenuService menuService;
 
+    //todo 获取当前用户信息
     @GetMapping("/getInfo")
     public ResponseResult<AdminUserInfoVo> getInfo(){
         //1. 查询当前登陆的用户
@@ -41,6 +46,7 @@ public class UserController {
         return ResponseResult.okResult(adminUserInfoVo);
     }
 
+    //todo 获取当前用户权限
     @GetMapping("/getRouters")
     public ResponseResult<RoutersVo> getRouters(){
         Long userId = SecurityUtils.getUserId();

@@ -21,6 +21,7 @@ import java.util.List;
 
 /**
  * 后台分类信息接口
+ * @author Ray2310
  */
 @RestController
 @RequestMapping("/content/category")
@@ -30,6 +31,7 @@ public class AdminCategoryController {
     private CategoryService categoryService;
 
 
+    //todo 文件导出为Excel
     @PreAuthorize("@ps.hasPerms('content:category:export')") //权限控制 ,检查访问的用户是否有权限
     @GetMapping("/export")
     public void exportExcel(HttpServletResponse response){
@@ -62,21 +64,26 @@ public class AdminCategoryController {
          return categoryService.listAllPage(pageNum,pageSize,categoryVo);
      }
 
+     //todo 新增分类
      @PostMapping
     public ResponseResult addCategory(@RequestBody CategoryVo categoryVo){
         return categoryService.addCategory(categoryVo);
      }
 
+
+     //todo 根据获取分类 为后续删除做准备
      @GetMapping("/{id}")
     public ResponseResult getCategoryById(@PathVariable Long id){
         return categoryService.getCategoryById(id);
      }
 
+     //todo 更新分类
      @PutMapping
     public ResponseResult updateCategory(@RequestBody CategoryVo categoryVo){
         return categoryService.updateCategory(categoryVo);
      }
 
+     //todo 删除分类
      @DeleteMapping("/{id}")
     public ResponseResult deleteCategory(@PathVariable Long id){
         return categoryService.deleteCategory(id);

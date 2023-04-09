@@ -36,20 +36,19 @@ public class WebConfig implements WebMvcConfigurer {
                 .maxAge(3600);
     }
 
-    //todo 修改时间格式 【yyyy-MM-dd HH:mm:ss】
-    // 其实也可以直接在相关字段上加注解
-    // @JsonFormat(timezone="GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
-    // 只是这样做可以使所有的时间格式都转换(全局配置)
-    @Bean//使用@Bean注入fastJsonHttpMessageConvert
+    /**修改时间格式 【yyyy-MM-dd HH:mm:ss】 其实也可以直接在相关字段上
+     * 加注解@JsonFormat(timezone="GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+     *  只是这样做可以使所有的时间格式都转换(全局配置)
+     * @return
+     */
+    @Bean
     public HttpMessageConverter fastJsonHttpMessageConverters() {
         //1.需要定义一个Convert转换消息的对象
         FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
         fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
-
         SerializeConfig.globalInstance.put(Long.class, ToStringSerializer.instance);
-
         fastJsonConfig.setSerializeConfig(SerializeConfig.globalInstance);
         fastConverter.setFastJsonConfig(fastJsonConfig);
         HttpMessageConverter<?> converter = fastConverter;

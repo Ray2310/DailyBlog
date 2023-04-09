@@ -40,7 +40,13 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     @Resource
     private UserService userService;
 
-    //实现分页tag列表
+    /**
+     * 实现分页tag列表
+     * @param pageNum 当前页
+     * @param pageSize 分页大小
+     * @param tagListDto 可以进行模糊查询的字段
+     * @return
+     */
     @Override
     public ResponseResult<PageVo> pageTagList(Integer pageNum, Integer pageSize, TagListDto tagListDto) {
         //分页查询
@@ -57,7 +63,11 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         return ResponseResult.okResult(pageVo);
     }
 
-    //todo 新增标签需求   需要在数据库记录中有创建时间、更新时间、创建人、创建人字段
+    /**
+     * 新增标签需求   需要在数据库记录中有创建时间、更新时间、创建人、创建人字段
+     * @param tagListDto 新增标签信息
+     * @return
+     */
     @Override
     public ResponseResult addTag(TagListDto tagListDto) {
         //1. 接收请求信息,判断信息是否为空
@@ -75,8 +85,11 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         return ResponseResult.okResult(tag);
     }
 
-    //todo 删除标签需求 需要设置逻辑删除 也就是
-    //`del_flag` int DEFAULT '0' COMMENT '删除标志（0代表未删除，1代表已删除）',
+    /**
+     * 逻辑删除标签
+     * @param id 需要删除的标签id
+     * @return
+     */
     @Override
     public ResponseResult deleteTag(Long id) {
         //1. 从数据库中查找要删除的id
@@ -89,7 +102,11 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         return ResponseResult.okResult();
     }
 
-    //todo 获取需要修改的标签信息
+    /**
+     * 查询需要进行修改的标签
+     * @param id 标签id
+     * @return
+     */
     @Override
     public ResponseResult getTagById(Long id) {
         Tag tag = getById(id);
@@ -97,7 +114,11 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         return ResponseResult.okResult(dto);
     }
 
-    //todo 修改信息
+    /**
+     * 修改标签
+     * @param tagDto 修改的内容
+     * @return
+     */
     @Override
     public ResponseResult updateTag(TagDto tagDto) {
         System.out.println(tagDto.toString());
@@ -109,7 +130,10 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         return ResponseResult.okResult();
     }
 
-    //todo 获取所有的标签，不分页的
+    /**
+     * 不分页获取所有标签
+     * @return
+     */
     @Override
     public ResponseResult listAllTag() {
         //查询出所有没有删除的标签

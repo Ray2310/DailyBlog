@@ -23,6 +23,10 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Objects;
 
+/**
+ * 前端登录接口实现
+ * @author Ray2310
+ */
 @Service
 public class BlogLoginServiceImpl implements BlogLoginService {
 
@@ -35,24 +39,15 @@ public class BlogLoginServiceImpl implements BlogLoginService {
     @Resource
     private RedisCache redisCache;
 
-    //todo 登录业务
+    /**
+     * 登录业务
+     */
     @Override
     public ResponseResult login(User user) {
         //需要调用AuthenticationManager ,返回Authentication对象
-        //authenticationManager 它会调用userDetailsService
-
-
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(),user.getPassword());
-
-        /**
-         * 认证功能暂时有bug ，先跳过认证
-         * Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-         *          System.out.println(authenticate);
-         */
+        //authenticationManager 它会调用userDetailsService
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-
-        //判断是否认证通过
-        //获取userId ，生成token
         //判断是否认证通过
         if(Objects.isNull(authenticate)){
             throw new RuntimeException("用户名或密码错误");
@@ -71,16 +66,18 @@ public class BlogLoginServiceImpl implements BlogLoginService {
     }
 
 
-    //todo 退出登录
+    /**
+     * 退出登录
+     * @return
+     */
     @Override
     public ResponseResult logout() {
         //获取 token 解析获取 userId
+        //通过security获取用户登陆信息
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("异常处理----"+ authentication.getPrincipal());
-
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         Long userId = loginUser.getUser().getId();
-
+        //删除redis中的缓存
         redisCache.deleteObject(SystemConstants.LOGIN_KEY_PREFIX + userId);
         return ResponseResult.okResult();
     }

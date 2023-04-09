@@ -16,6 +16,11 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * 后台菜单相关接口
+ * @author Ray2310
+ */
 @RestController
 @RequestMapping("/system/menu")
 public class AdminMenuController {
@@ -43,17 +48,17 @@ public class AdminMenuController {
         return menuService.selectById(id);
     }
 
+    //todo 更新菜单
     @PutMapping
     public ResponseResult updateMenu(@RequestBody Menu menu){
         return menuService.updateMenu(menu);
     }
+    //todo 删除菜单
     @DeleteMapping("/{id}")
     public ResponseResult deleteById(@PathVariable Long id){
         return menuService.deleteById(id);
     }
-    /**
-     * 获取菜单下拉树列表
-     */
+    //todo 下拉获取菜单树
     @GetMapping("/treeselect")
     public ResponseResult treeselect() {
         //复用之前的selectMenuList方法。方法需要参数，参数可以用来进行条件查询，而这个方法不需要条件，所以直接new Menu()传入
@@ -62,14 +67,10 @@ public class AdminMenuController {
         return ResponseResult.okResult(options);
     }
 
-    /**
-     * 回显对应id的角色的权限树
-     * @param id
-     * @return
-     */
+
+     //todo 回显对应id的角色的权限树
     @GetMapping("/roleMenuTreeselect/{id}")
     public ResponseResult roleMenuTreeSelect(@PathVariable Long id){
-
         //1. 先查寻对应角色的权限id集合， 然后，将id集合一一对应查询出对应的权限集合
         List<Menu> menus = menuService.selectMenuList(new Menu());
         LambdaQueryWrapper<RoleMenu> wrapper = new LambdaQueryWrapper<>();

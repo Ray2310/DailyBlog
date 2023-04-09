@@ -35,6 +35,10 @@ import java.util.List;
 
 import static com.blog.enums.AppHttpCodeEnum.*;
 
+/**
+ * 用户信息接口实现类
+ * @author Ray2310
+ */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
@@ -190,7 +194,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 //-----------------------blog前端----------------------------------
 
-    //todo 用户中心
+    /**
+     * 用户中心
+     * @return
+     */
     @Override
     public ResponseResult userInfo() {
         //获取当前用户
@@ -203,7 +210,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
 
-    //todo 更新个人信息
+    /**
+     * 更新用户信息
+     * @param user 用户信息
+     * @return
+     */
     @Override
     public ResponseResult updateUserInfo(User user) {
         updateById(user);
@@ -211,7 +222,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
 
-    //todo 注册用户
+    /**
+     * 注册用户
+     * @param user 注册的用户信息
+     * @return
+     */
     @Override
     public ResponseResult register(User user) {
         //对数据进行非空判断 要求用户名 密码 等都不为空
@@ -246,7 +261,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
 
-    //todo 判断用户名是否存在
+    /**
+     * 查询数据库判断用户名是否存在
+     * @param username 用户名
+     * @return
+     */
     private boolean usernameExist(String username){
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getUserName,username);
@@ -256,7 +275,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         return false;
     }
-    //todo 判断昵称是否存在
+
+    /**
+     * 判断昵称是否存在
+     * @param nickName 昵称
+     * @return
+     */
     private boolean nickNameExist(String nickName){
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getNickName,nickName);
@@ -266,7 +290,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         return false;
     }
-    //todo 判断电话是否存在
+
+    /**
+     * 判断电话是否存在
+     * @param phonenumber 电话
+     * @return
+     */
     private boolean phoneNumberExist(String phonenumber){
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getPhonenumber,phonenumber);
@@ -276,7 +305,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         return false;
     }
-    //todo 判断邮箱是否存在
+
+    /**
+     * 判断邮箱是否存在
+     * @param Email 邮箱
+     * @return
+     */
     private boolean EmailExist(String Email){
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getEmail,Email);

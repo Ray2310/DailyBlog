@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.blog.domain.ResponseResult;
 import com.blog.domain.entity.Article;
 import com.blog.domain.entity.Category;
-
 import com.blog.domain.vo.CategoryVo;
 import com.blog.domain.vo.PageVo;
 import com.blog.mapper.CategoryMapper;
@@ -22,17 +21,22 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * 分类相关接口实现
+ * @author Ray2310
+ */
 @Service
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements CategoryService {
 
     @Resource
     private ArticleService articleService;
 
-
-    //todo 分类请求
+    /**
+     * 获取所有分类列表（不分页）
+     * @return 返回
+     */
     @Override
     public ResponseResult getCategoryList() {
         //1. 先在文章表中查询 status（文章发布or未发布）为 0 的，也就是发布了的 。还有就是未删除的
@@ -40,14 +44,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         queryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_PUT);
         List<Article> articles = articleService.list(queryWrapper);
         //2. 查出上一步的之后只需要查分类id就可以了（category_id）
-        //todo 函数式编程 ，用来将查询到的id查询category
+        // 函数式编程 ，用来将查询到的id查询category
         Set<Long> categoryIds = articles.stream()
-                .map(new Function<Article, Long>() {
-                    @Override
-                    public Long apply(Article article) {
-                        return article.getCategoryId();
-                    }
-                }).collect(Collectors.toSet());
+                .map(article -> article.getCategoryId()).collect(Collectors.toSet());
         //3. 然后再到category表中查出对应的名称即可 ,还需要判断分类的状态是正常的
         List<Category> categories = listByIds(categoryIds);
         //4. 判断分类的状态是正常的
@@ -58,6 +57,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         return ResponseResult.okResult(categoryVoList);
     }
 
+
+    /**
+     * 获取分类列表
+     * @return
+     */
     @Override
     public List<CategoryVo> listAllCategory() {
         //查询出所有没有删除的分类
@@ -69,8 +73,10 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         return categoryVo1s;
     }
 
+
+    //--------------------------后台实现 --------------------------------
     /**
-     * 分页导出所有分类
+     * 分页获取所有分类
      * @param pageNum 页码
      * @param pageSize 分页大小
      * @return
@@ -96,7 +102,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     /**
      * 新增分类
-     * @param categoryVo
+     * @param categoryVo 前端传入的分类信息
      * @return
      */
     @Override
@@ -108,6 +114,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     /**
      * 根据id获取分类信息
+     * @param id 分类id
+     * @return 返回响应信息
      */
     @Override
     public ResponseResult getCategoryById(Long id) {

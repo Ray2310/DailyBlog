@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class HotArticle {
+public class HotArticleVo {
     //文章id
     private Long id;
     //文章标题
